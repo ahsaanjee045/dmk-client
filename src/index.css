@@ -1,0 +1,35 @@
+@font-face {
+    font-family: "Conquera";
+    src: url("./fonts/Conquera-Heavy.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Conquera";
+    src: url("./fonts/Conquera-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Conquera";
+    src: url("./fonts/Conquera-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Conquera";
+    src: url("./fonts/Conquera-Fine.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Conquera";
+    src: url("./fonts/Conquera-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+
