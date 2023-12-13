@@ -18,7 +18,7 @@ import { Link, Navigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../../slices/authSlice";
+import { loginWithGoogle, register } from "../../slices/authSlice";
 
 function Copyright(props) {
     return (
@@ -170,7 +170,7 @@ export default function Register() {
                             <Grid item>OR</Grid>
                         </Grid>
                         <Button
-                            // onClick={signinWithGoogle}
+                            onClick={() => dispatch(loginWithGoogle())}
                             fullWidth
                             variant="contained"
                             sx={{

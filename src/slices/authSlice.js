@@ -43,6 +43,18 @@ export const login = createAsyncThunk(
     }
 );
 
+
+export const loginWithGoogle = createAsyncThunk("auth/loginWithGoogle", async () => {
+    try {
+        let res = await axios.get("/user/login/google")
+        console.log("REsponse from google api", res)
+        return true
+    } catch (error) {
+        console.log("ERROR IN LOGIN WITH GOOGLE FUNCTION IN AUTH SLICE", error);
+        throw new Error(error.response.data.message || error.message);
+    }
+})
+
 const authSlice = createSlice({
     name: "auth",
     initialState: {
@@ -86,6 +98,20 @@ const authSlice = createSlice({
             localStorage.setItem("user", JSON.stringify(action.payload));
         });
         builder.addCase(login.rejected, (state, action) => {
+            state.loading = true;
+            state.error = action.error.message;
+        });
+        builder.addCase(loginWithGoogle.pending, (state, action) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            // state.user = action.payload;
+            // localStorage.setItem("user", JSON.stringify(action.payload));
+        });
+        builder.addCase(loginWithGoogle.rejected, (state, action) => {
             state.loading = true;
             state.error = action.error.message;
         });
