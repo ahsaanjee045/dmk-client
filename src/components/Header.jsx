@@ -28,7 +28,7 @@ import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
-import { logoutSync } from "../slices/authSlice";
+import { logoutAsync } from "../slices/authSlice";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -154,7 +154,7 @@ const Header = () => {
                     <>
                         <Button
                             // title="Logout"
-                            onClick={() => dispatch(logoutSync())}
+                            onClick={() => dispatch(logoutAsync())}
                             variant="text"
                             sx={{
                                 color: "white",

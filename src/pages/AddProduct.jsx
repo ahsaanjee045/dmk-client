@@ -35,22 +35,22 @@ const AddProduct = () => {
     } = useSelector((state) => state.userState);
 
     const [productData, setProductData] = useState(INITIAL_PRODUCT_STATE);
+    const [image, setImage] = useState("");
 
-    // console.log("Categories ...", categories[0
-    const handleAddProduct = () => {
-        // validation
-
+    const handleAddProduct = (e) => {
+        e.preventDefault();
         let formData = new FormData();
 
         for (const property in productData) {
             formData.append(property, productData[property]);
         }
-
-        // console.log(Object.fromEntries(formData));
+        console.log(formData.get("image"));
         dispatch(createProduct({ formData, token }));
-
         setProductData(INITIAL_PRODUCT_STATE);
     };
+
+    // console.log(token)
+    console.log(productData.image);
 
     return (
         <Box
@@ -246,56 +246,141 @@ const AddProduct = () => {
                         >
                             Product Image
                         </InputLabel>
-                        <Box
-                            onClick={() => {
-                                document
-                                    .getElementById("product-image")
-                                    .click();
-                            }}
-                            sx={{
-                                mt: "8px",
-                                border: "2px dashed #e5e2e2",
-                                padding: "40px 0",
-                                borderRadius: "7px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                cursor: "pointer",
-                                ":hover .icon": {
-                                    scale: "1.2",
-                                },
-                            }}
-                        >
-                            <Box textAlign={"center"}>
-                                <Image
-                                    className="icon"
-                                    sx={{
-                                        fontSize: "30px",
-                                        color: "#898787",
-                                        transition: "all 0.3s ease-in-out",
-                                    }}
-                                />
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{ fontSize: "16px", color: "#898787" }}
-                                >
-                                    Click Here to upload Image
-                                </Typography>
-                            </Box>
-                            <input
-                                onChange={(e) => {
+                        <input
+                            onChange={(e) => {
+                                setProductData({
+                                    ...productData,
+                                    image: e.target.files[0],
+                                });
+
+                                let file = e.target.files[0];
+                                let fileReader = new FileReader();
+                                fileReader.onload = (e) => {
+                                    setImage(e.currentTarget.result);
+                                };
+
+                                fileReader.onerror = (e) => {
+                                    console.log(e);
+                                    setImage("");
                                     setProductData({
                                         ...productData,
-                                        image: e.target.files[0],
+                                        image: "",
                                     });
+                                };
+
+                                fileReader.readAsDataURL(file);
+                            }}
+                            // multiple
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            id="product-image"
+                        />
+                        {!productData.image ? (
+                            <Box
+                                onClick={() => {
+                                    document
+                                        .getElementById("product-image")
+                                        .click();
                                 }}
-                                // multiple
-                                type="file"
-                                accept="image/*"
-                                hidden
-                                id="product-image"
-                            />
-                        </Box>
+                                sx={{
+                                    mt: "8px",
+                                    border: "2px dashed #e5e2e2",
+                                    padding: "40px 0",
+                                    borderRadius: "7px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    cursor: "pointer",
+                                    ":hover .icon": {
+                                        scale: "1.2",
+                                    },
+                                }}
+                            >
+                                <Box textAlign={"center"}>
+                                    <Image
+                                        className="icon"
+                                        sx={{
+                                            fontSize: "30px",
+                                            color: "#898787",
+                                            transition: "all 0.3s ease-in-out",
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            fontSize: "16px",
+                                            color: "#898787",
+                                        }}
+                                    >
+                                        Click Here to upload Image
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        ) : (
+                            <>
+                                <Box
+                                    sx={{
+                                        mt: "10px",
+                                        width: "200px",
+                                        height: "200px",
+                                        overflow: "hidden",
+                                        border: "0.7px solid lightgray",
+                                        borderRadius: "10px",
+                                    }}
+                                >
+                                    {image && (
+                                        <>
+                                            <img
+                                                style={{
+                                                    height: "100%",
+                                                    width: "100%",
+                                                    objectFit: "cover",
+                                                    objectPosition: "center",
+                                                }}
+                                                src={image}
+                                                alt=""
+                                                id="preview-image"
+                                            />
+                                        </>
+                                    )}
+                                    {!image && (
+                                        <Box
+                                            sx={{
+                                                height: "100%",
+                                                width: "100%",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <ClipLoader
+                                                size={20}
+                                                color="#000"
+                                            />
+                                        </Box>
+                                    )}
+                                </Box>
+                                {image && (
+                                    <Button
+                                        sx={{
+                                            color: "black",
+                                            fontSize: "13px",
+                                            mt: "13px",
+                                            border: "0.3px solid lightgray",
+                                        }}
+                                        variant="text"
+                                        onClick={() => {
+                                            document
+                                                .getElementById("product-image")
+                                                .click();
+                                        }}
+                                    >
+                                        Change Image
+                                    </Button>
+                                )}
+                            </>
+                        )}
                     </Box>
                 </Box>
             </Box>

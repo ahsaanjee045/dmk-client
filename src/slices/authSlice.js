@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const getUserFromLocalStorage = () => {
     let user = localStorage.getItem("user");
@@ -43,17 +44,39 @@ export const login = createAsyncThunk(
     }
 );
 
+export const getUserFromSession = createAsyncThunk(
+    "auth/getUserFromSession",
+    async () => {
+        try {
+            let res = await axios.get("/user/getuser", {
+                withCredentials: true,
+            });
+            console.log("REsponse from google api", res);
+            return { user: res.data.data };
+        } catch (error) {
+            console.log(
+                "ERROR IN LOGIN WITH GOOGLE FUNCTION IN AUTH SLICE",
+                error
+            );
+            throw new Error(error.response.data.message || error.message);
+        }
+    }
+);
 
-export const loginWithGoogle = createAsyncThunk("auth/loginWithGoogle", async () => {
+export const logoutAsync = createAsyncThunk("auth/logoutAsync", async () => {
     try {
-        let res = await axios.get("/user/login/google")
-        console.log("REsponse from google api", res)
-        return true
+        let res = await axios.get("/user/logout", {
+            withCredentials: true,
+        });
+        if (res.data.success) {
+            return true;
+        }
+        throw new Error("Cannot Logout!");
     } catch (error) {
-        console.log("ERROR IN LOGIN WITH GOOGLE FUNCTION IN AUTH SLICE", error);
+        console.log("ERROR IN LOGOUT FUNCTION IN AUTH SLICE", error);
         throw new Error(error.response.data.message || error.message);
     }
-})
+});
 
 const authSlice = createSlice({
     name: "auth",
@@ -69,7 +92,8 @@ const authSlice = createSlice({
         logoutSync: (state, action) => {
             state.user = null;
             state.error = null;
-            (state.loading = false), (state.success = false);
+            state.loading = false;
+            state.success = false;
             localStorage.removeItem("user");
         },
     },
@@ -101,17 +125,33 @@ const authSlice = createSlice({
             state.loading = true;
             state.error = action.error.message;
         });
-        builder.addCase(loginWithGoogle.pending, (state, action) => {
+        builder.addCase(getUserFromSession.pending, (state, action) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
+        builder.addCase(getUserFromSession.fulfilled, (state, action) => {
             state.loading = false;
             state.error = null;
-            // state.user = action.payload;
-            // localStorage.setItem("user", JSON.stringify(action.payload));
+            state.user = action.payload;
+            localStorage.setItem("user", JSON.stringify(action.payload));
+            window.location.href = "/"
         });
-        builder.addCase(loginWithGoogle.rejected, (state, action) => {
+        builder.addCase(getUserFromSession.rejected, (state, action) => {
+            state.loading = true;
+            state.error = action.error.message;
+        });
+        builder.addCase(logoutAsync.pending, (state, action) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(logoutAsync.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.user = null;
+            localStorage.removeItem("user");
+            toast.success("Logged Out Successfully");
+        });
+        builder.addCase(logoutAsync.rejected, (state, action) => {
             state.loading = true;
             state.error = action.error.message;
         });

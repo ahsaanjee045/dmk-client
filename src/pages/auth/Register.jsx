@@ -1,11 +1,8 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Alert, Avatar, Button, Link as MuiLink } from "@mui/material";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-// import MuiLink  from "@mui/material/Link";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -18,7 +15,7 @@ import { Link, Navigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { loginWithGoogle, register } from "../../slices/authSlice";
+import { register } from "../../slices/authSlice";
 
 function Copyright(props) {
     return (
@@ -44,7 +41,9 @@ const defaultTheme = createTheme();
 
 export default function Register() {
     const dispatch = useDispatch();
-    const { loading, error, success, user} = useSelector((state) => state.userState);
+    const { loading, error, success, user } = useSelector(
+        (state) => state.userState
+    );
 
     const [registerData, setRegisterData] = useState({
         username: "",
@@ -170,7 +169,12 @@ export default function Register() {
                             <Grid item>OR</Grid>
                         </Grid>
                         <Button
-                            onClick={() => dispatch(loginWithGoogle())}
+                            onClick={() => {
+                                window.open(
+                                    "http://localhost:8000/api/v1/user/login/google",
+                                    "_self"
+                                );
+                            }}
                             fullWidth
                             variant="contained"
                             sx={{

@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 axios.defaults.baseURL = "http://localhost:8000/api/v1";
+axios.defaults.withCredentials = true
 
 export const createProduct = createAsyncThunk(
     "products/createProduct",

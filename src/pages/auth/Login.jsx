@@ -3,9 +3,6 @@ import { Avatar, Button, Link as MuiLink } from "@mui/material";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-// import MuiLink  from "@mui/material/Link";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -17,7 +14,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link, Navigate } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useDispatch, useSelector } from "react-redux";
-import { login, loginWithGoogle } from "../../slices/authSlice";
+import { login } from "../../slices/authSlice";
 
 function Copyright(props) {
     return (
@@ -59,9 +56,8 @@ export default function Login() {
         dispatch(login(loginData));
     };
 
-
-    if(user){
-        return <Navigate to={"/"}/>
+    if (user) {
+        return <Navigate to={"/"} />;
     }
 
     return (
@@ -111,7 +107,6 @@ export default function Login() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                   
                                     fullWidth
                                     name="password"
                                     label="Password"
@@ -140,14 +135,19 @@ export default function Login() {
                                 },
                             }}
                         >
-                           Log in
+                            Log in
                         </Button>
 
                         <Grid container justifyContent={"center"}>
                             <Grid item>OR</Grid>
                         </Grid>
                         <Button
-                            onClick={() => dispatch(loginWithGoogle())}
+                            onClick={() => {
+                                window.open(
+                                    "http://localhost:8000/api/v1/user/login/google",
+                                    "_self"
+                                );
+                            }}
                             fullWidth
                             variant="contained"
                             sx={{

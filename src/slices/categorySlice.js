@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 axios.defaults.baseURL = "http://localhost:8000/api/v1";
+axios.defaults.withCredentials = true;
 
 export const createCategory = createAsyncThunk(
     "category/createCategory",
@@ -27,7 +28,7 @@ export const getAllCategory = createAsyncThunk(
     async () => {
         try {
             let res = await axios.get("/category");
-            console.log("Category Response : ", res.data.data)
+            console.log("Category Response : ", res.data.data);
             return res.data.data;
         } catch (error) {
             console.log(
@@ -56,8 +57,8 @@ const categorySlice = createSlice({
         builder.addCase(createCategory.fulfilled, (state, action) => {
             state.loading = false;
             state.error = null;
-            state.categories?.push(action.payload)
-            toast.success("Category Created.")
+            state.categories?.push(action.payload);
+            toast.success("Category Created.");
         });
         builder.addCase(createCategory.rejected, (state, action) => {
             state.loading = false;
