@@ -49,8 +49,7 @@ const AddProduct = () => {
         setProductData(INITIAL_PRODUCT_STATE);
     };
 
-    // console.log(token)
-    console.log(productData.image);
+
 
     return (
         <Box

@@ -17,6 +17,8 @@ import { getAllCategory } from "./slices/categorySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "./slices/productSlice";
 import { getUserFromSession } from "./slices/authSlice";
+import Products from "./pages/Products";
+import SingleProduct from "./pages/SingleProduct";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -38,6 +40,8 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<BaseLayout />}>
                     <Route index element={<Homepage />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/product/:id" element={<SingleProduct />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/admin" element={<DashboardLayout />}>
                         <Route index element={<AddProduct />} />

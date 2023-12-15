@@ -3,7 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 axios.defaults.baseURL = "http://localhost:8000/api/v1";
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 
 export const createProduct = createAsyncThunk(
     "products/createProduct",
@@ -30,11 +30,28 @@ export const getAllProducts = createAsyncThunk(
     async () => {
         try {
             let res = await axios.get("/products");
-            console.log("Products Response : ", res.data.data);
+
             return res.data.data;
         } catch (error) {
             console.log(
                 "ERROR IN GET ALL PRODUCTS FUNCTION IN PRODUCT SLICE",
+                error
+            );
+            throw new Error(error.response.data.message || error.message);
+        }
+    }
+);
+
+export const getSingleProduct = createAsyncThunk(
+    "products/getSingleProduct",
+    async (id) => {
+        try {
+            let res = await axios.get(`/products/${id}`);
+
+            return res.data.data;
+        } catch (error) {
+            console.log(
+                "ERROR IN GET SINGLE PRODUCTS FUNCTION IN PRODUCT SLICE",
                 error
             );
             throw new Error(error.response.data.message || error.message);
@@ -48,6 +65,7 @@ const productSlice = createSlice({
         products: [],
         loading: false,
         error: null,
+        product : null
     },
     // reducers must be purely synchronous
     reducers: {},
@@ -76,6 +94,19 @@ const productSlice = createSlice({
             state.products = action.payload;
         });
         builder.addCase(getAllProducts.rejected, (state, action) => {
+            state.loading = false;
+            state.error = null;
+        });
+        builder.addCase(getSingleProduct.pending, (state, action) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(getSingleProduct.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            state.product = action.payload;
+        });
+        builder.addCase(getSingleProduct.rejected, (state, action) => {
             state.loading = false;
             state.error = null;
         });
